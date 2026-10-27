@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Code Quality Onboarding Checklist — 30-Day Setup</title>
+  <meta name="description" content="An interactive, four-week GitHub Code Quality onboarding checklist with 13 tasks, documentation links, practical tips, and saved progress." />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gh-bg:        #ffffff;
+      --gh-surface:   #ffffff;
+      --gh-border:    #e1e4e8;
+      --gh-text:      #1f2328;
+      --gh-muted:     #57606a;
+      --gh-link:      #0969da;
+      --gh-green:     #08872B;
+      --gh-green-btn: #0FBF3E;
+      --gh-green-light: #dafbe1;
+      --gh-tip-bg:    #F2F5F3;
+      --radius:       6px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background: var(--gh-bg);
+      color: var(--gh-text);
+      font-family: var(--font);
+      font-size: 16px;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    a { color: var(--gh-link); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── Centered container ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 24px 24px 16px;
+    }
+
+    header .logo {
+      width: 70px;
+      height: auto;
+      margin-bottom: 16px;
+    }
+
+    header h1 {
+      font-size: 22px;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--gh-text);
+    }
+
+    .subtitle { color: var(--gh-muted); font-size: 14px; margin-top: 8px; }
+
+    /* ── Divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--gh-border);
+      margin: 0 0 24px;
+    }
+
+    /* ── Progress bar ── */
+    .progress-section {
+      padding: 16px 0 24px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .progress-header .label { font-weight: 600; font-size: 14px; }
+    .progress-header .count { font-size: 13px; color: var(--gh-muted); }
+
+    .progress-bar-track {
+      background: var(--gh-border);
+      border-radius: 99px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--gh-green-btn);
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .reset-btn {
+      display: block;
+      margin: 12px auto 0;
+      font-size: 12px;
+      font-family: var(--font);
+      color: var(--gh-muted);
+      background: transparent;
+      border: 1px solid var(--gh-border);
+      border-radius: var(--radius);
+      padding: 5px 14px;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .reset-btn:hover { border-color: var(--gh-muted); color: var(--gh-text); }
+
+    .storage-status {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--gh-muted);
+    }
+    .storage-status.warning, .no-script {
+      color: #7d4e00;
+      background: #fff8c5;
+      padding: 8px 12px;
+      border-radius: var(--radius);
+    }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--gh-link);
+      outline-offset: 3px;
+    }
+
+    /* ── Week card ── */
+    .week-card {
+      border: 8px solid var(--gh-green);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      overflow: hidden;
+      background: var(--gh-surface);
+    }
+
+    .week-header {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 30px 14px;
+    }
+
+    .week-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 99px;
+      white-space: nowrap;
+      background: var(--gh-green-light);
+      color: var(--gh-green);
+    }
+
+    .week-title-group { flex: 1; }
+    .week-title { font-size: 16px; font-weight: 600; }
+    .week-days  { font-size: 12px; color: var(--gh-muted); margin-top: 1px; }
+
+    .week-progress-mini {
+      font-size: 12px;
+      color: var(--gh-muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+    .week-progress-mini strong { color: var(--gh-text); }
+
+    /* ── Task rows ── */
+    .tasks-list { list-style: none; }
+
+    .task-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 14px 30px;
+      border-bottom: 1px solid var(--gh-border);
+      transition: background 0.15s;
+    }
+    .task-item:last-child { border-bottom: none; }
+    .task-item:hover { background: rgba(0,0,0,0.015); }
+
+    .task-item.done .task-main { opacity: 0.5; }
+    .task-item.done .task-name { text-decoration: line-through; }
+
+    .task-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 17px; height: 17px;
+      border: 2px solid var(--gh-border);
+      border-radius: 4px;
+      background: var(--gh-bg);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 2px;
+      position: relative;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .task-checkbox:checked {
+      background: var(--gh-green-btn);
+      border-color: var(--gh-green-btn);
+    }
+    .task-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px; top: 0px;
+      width: 6px; height: 10px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+    .task-checkbox:focus-visible { outline: 2px solid var(--gh-link); outline-offset: 2px; }
+
+    .task-main { flex: 1; min-width: 0; }
+    .task-name { display: block; cursor: pointer; font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+    .task-desc { font-size: 13px; color: var(--gh-muted); }
+    .task-desc .link-row { margin-top: 6px; }
+
+    .task-desc .link-row > a {
+      font-size: inherit; /* matches .task-desc (13px) */
+      color: var(--gh-link);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding-bottom: 5px;
+    }
+
+    .task-desc .link-row > a::before { content: '→'; }
+
+    .task-desc .link-row .tip-box {
+      display: block;
+      margin-top: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: var(--gh-text);
+      line-height: 1.5;
+      background: var(--gh-tip-bg);
+      border: none;
+      outline: none;
+      border-radius: var(--radius);
+    }
+
+    .task-desc .link-row .tip-box strong {
+      font-weight: 600;
+    }
+
+    /* ── Milestone banner ── */
+    .milestone-banner {
+      margin: 14px 30px 20px;
+      background: none;
+      border-radius: var(--radius);
+      padding: 4px 14px 12px; /* was 6px 14px 12px */
+      font-size: 13px;
+      color: var(--gh-text);
+      display: block; /* was flex */
+    }
+
+    .milestone-banner::before {
+      content: '';
+      display: block;
+      width: 100%;                 /* was 40% */
+      height: 1px;                 /* match checklist divider thickness */
+      background: var(--gh-border);/* light gray */
+      margin: 0 0 14px;            /* match checklist item spacing rhythm */
+      border-radius: 0;            /* optional: cleaner for 1px line */
+    }
+
+    /* remove icon styling entirely */
+    .milestone-banner .mi-icon { display: none; }
+
+    .milestone-banner .mi-text strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: #08872B;
+    }
+
+    .milestone-banner .mi-text span {
+      color: inherit; /* auto black via parent color */
+      font-size: 12px;
+    }
+
+    /* ── All-done message ── */
+    #all-done {
+      display: none;
+      text-align: center;
+      padding: 40px 20px;
+      border: 2px dashed var(--gh-green-btn);
+      border-radius: var(--radius);
+      background: var(--gh-green-light);
+      margin-top: 8px;
+    }
+    #all-done h2 { color: var(--gh-green); font-size: 22px; margin-bottom: 8px; }
+    #all-done p  { color: var(--gh-muted); font-size: 14px; }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 12px;
+      color: var(--gh-muted);
+      line-height: 1.4;
+    }
+    footer .footer-links {
+      margin-bottom: 12px;
+    }
+    footer .footer-links a {
+      color: var(--gh-link);
+      text-decoration: none;
+    }
+    footer .footer-links a:hover { text-decoration: underline; }
+
+    @media (max-width: 600px) {
+      .container { padding: 0 16px; }
+      header { padding: 24px 0 16px; }
+      header h1 { font-size: 20px; }
+      .progress-header { gap: 8px; flex-wrap: wrap; }
+      .week-header { grid-template-columns: 1fr auto; padding: 16px; gap: 8px; }
+      .week-badge { justify-self: start; }
+      .week-title-group { grid-column: 1 / -1; grid-row: 2; }
+      .task-item { padding: 14px 16px; gap: 12px; }
+      .milestone-banner { margin: 14px 16px 16px; padding: 4px 0 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- ════════════════  HEADER  ════════════════ -->
+<header>
+  <img class="logo"
+    src="https://d15k2d11r6t6rl.cloudfront.net/pub/hmd2/fnngtanu/0n7/gl8/f2j/mark-github-24.png"
+    alt="GitHub Logo" />
+  <h1>Onboarding Checklist: GitHub Code Quality</h1>
+  <p class="subtitle">30-Day Setup Checklist · 4 weeks · 13 tasks</p>
+</header>
+
+<hr class="divider" />
+
+<!-- ════════════════  MAIN  ════════════════ -->
+<main>
+
+  <noscript><p class="no-script">Enable JavaScript to track and save your progress. All checklist content and resource links are available below.</p></noscript>
+
+  <!-- Overall progress bar -->
+  <div class="progress-section">
+    <div class="progress-header">
+      <span class="label" id="progress-label">Overall Progress</span>
+      <span class="count" id="overall-count" role="status">0 / 13 tasks completed</span>
+    </div>
+    <div class="progress-bar-track" id="overall-progress" role="progressbar" aria-labelledby="progress-label" aria-valuemin="0" aria-valuemax="13" aria-valuenow="0" aria-valuetext="0 of 13 tasks completed">
+      <div class="progress-bar-fill" id="overall-bar"></div>
+    </div>
+    <button class="reset-btn" id="reset-btn" type="button">Reset progress</button>
+    <p class="storage-status" id="storage-status" role="status">Progress is saved in this browser only, not shared across devices.</p>
+  </div>
+
+  <!-- ── WEEK 1 ── -->
+  <section class="week-card" aria-labelledby="w1-title">
+    <div class="week-header">
+      <span class="week-badge">Week 1</span>
+      <div class="week-title-group">
+        <h2 class="week-title" id="w1-title">Configure Your Foundation</h2>
+        <p class="week-days">Get GitHub Code Quality switched on so findings start flowing from day one</p>
+      </div>
+      <div class="week-progress-mini" id="w1-count"><strong>0</strong> / 3</div>
+    </div>
+
+    <ul class="tasks-list" id="w1-tasks">
+
+      <li class="task-item" data-week="1">
+        <input class="task-checkbox" type="checkbox" id="allow-enterprise" />
+        <div class="task-main">
+          <label class="task-name" for="allow-enterprise">Allow Code Quality across your enterprise</label>
+          <div class="task-desc">
+            Before any team can turn it on, an enterprise owner needs to allow GitHub Code Quality. This one setting unlocks the product for every organization underneath it.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/secure-at-scale/configure-enterprise-security/configure-specific-tools/allow-github-code-quality-in-enterprise" target="_blank" rel="noopener">
+                <strong>Unlock the product</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> GitHub Actions must also be enabled, because Code Quality runs each CodeQL analysis as an action. Confirm that first to avoid a failed rollout.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="1">
+        <input class="task-checkbox" type="checkbox" id="enable-code-quality" />
+        <div class="task-main">
+          <label class="task-name" for="enable-code-quality">Turn on Code Quality</label>
+          <div class="task-desc">
+            Enable Code Quality for a single repository or for every repo in your org all at once. Findings appear inline on pull requests and across your default branch immediately.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/enable-code-quality"
+                 target="_blank" rel="noopener">
+                <strong>Get started</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Rule-based CodeQL analysis covers C#, Go, Java, JavaScript, Python, Ruby, and TypeScript. AI-powered analysis also runs on recently changed code, <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-quality/code-quality#supported-languages" target="_blank" rel="noopener">including languages beyond that list</a>.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="1">
+        <input class="task-checkbox" type="checkbox" id="setup-code-coverage" />
+        <div class="task-main">
+          <label class="task-name" for="setup-code-coverage">Set up code coverage</label>
+          <div class="task-desc">
+            Skip hand-authoring CI config. An AI-powered agent can analyze your repo, identify your test framework, run your tests with coverage enabled, and open a pull request with a working coverage workflow.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/set-up-code-coverage#automatic-setup"
+                 target="_blank" rel="noopener">
+                <strong>Automate setup</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> The agent opens its pull request with a planning commit first, so if it shows 0 changed files, wait a few minutes and refresh. If it stops early, review its session log in your repository’s Tasks tab. <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-quality/automatic-code-coverage-setup#how-the-agent-works" target="_blank" rel="noopener">See how the agent works</a>.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="milestone-banner">
+      <div class="mi-text">
+        <strong>Steps completed? Here's the exec recap:</strong>
+        <span>GitHub Code Quality is configured and scanning, with a coverage baseline in place and ready to roll out.</span>
+      </div>
+    </div>
+  </section><!-- /week 1 -->
+
+
+  <!-- ── WEEK 2 ── -->
+  <section class="week-card" aria-labelledby="w2-title">
+    <div class="week-header">
+      <span class="week-badge">Week 2</span>
+      <div class="week-title-group">
+        <h2 class="week-title" id="w2-title">Customize Your Standards</h2>
+        <p class="week-days">Tune thresholds and scope so quality gates match how your teams actually build</p>
+      </div>
+      <div class="week-progress-mini" id="w2-count"><strong>0</strong> / 3</div>
+    </div>
+
+    <ul class="tasks-list" id="w2-tasks">
+
+      <li class="task-item" data-week="2">
+        <input class="task-checkbox" type="checkbox" id="quality-thresholds" />
+        <div class="task-main">
+          <label class="task-name" for="quality-thresholds">Set quality thresholds for pull requests</label>
+          <div class="task-desc">
+            Use rulesets to block pull requests that don’t meet your standards, so new quality debt stops accumulating in your codebase.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/set-pr-thresholds"
+                 target="_blank" rel="noopener">
+                <strong>Set your bar</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Start permissive in a pilot repo and tighten as your teams adapt. Blocking too aggressively on day one is the fastest way to lose developer goodwill.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="2">
+        <input class="task-checkbox" type="checkbox" id="coverage-thresholds" />
+        <div class="task-main">
+          <label class="task-name" for="coverage-thresholds">Determine coverage thresholds for pull requests</label>
+          <div class="task-desc">
+            Prevent pull requests from merging when uploaded coverage falls below the level your team requires, protecting the test coverage you’ve already earned.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/restrict-code-coverage"
+                 target="_blank" rel="noopener">
+                <strong>Protect coverage</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Developers can see which files are dragging coverage down in the <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/view-coverage-on-prs" target="_blank" rel="noopener">coverage summary posted on each pull request</a>.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="2">
+        <input class="task-checkbox" type="checkbox" id="repository-scope" />
+        <div class="task-main">
+          <label class="task-name" for="repository-scope">Scope which repos are covered</label>
+          <div class="task-desc">
+            Control Code Quality from a single point with the org-level <strong>Repository access</strong> setting, and decide exactly which repos are in scope.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/concepts/code-quality/enablement-at-scale"
+                 target="_blank" rel="noopener">
+                <strong>Take control</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> You can target every repo, a specific list, or a dynamic filter that automatically picks up new repos as they're created.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="milestone-banner">
+      <div class="mi-text">
+        <strong>Steps completed? Here's the exec recap:</strong>
+        <span>Quality and coverage thresholds now reflect your org’s engineering standards, with guardrails on which repos are held to them.</span>
+      </div>
+    </div>
+  </section><!-- /week 2 -->
+
+
+  <!-- ── WEEK 3 ── -->
+  <section class="week-card" aria-labelledby="w3-title">
+    <div class="week-header">
+      <span class="week-badge">Week 3</span>
+      <div class="week-title-group">
+        <h2 class="week-title" id="w3-title">Build Adoption</h2>
+        <p class="week-days">Expand coverage and turn findings into merged fixes</p>
+      </div>
+      <div class="week-progress-mini" id="w3-count"><strong>0</strong> / 4</div>
+    </div>
+
+    <ul class="tasks-list" id="w3-tasks">
+
+      <li class="task-item" data-week="3">
+        <input class="task-checkbox" type="checkbox" id="rollout-at-scale" />
+        <div class="task-main">
+          <label class="task-name" for="rollout-at-scale">Roll out Code Quality at scale</label>
+          <div class="task-desc">
+            Bring Code Quality to every team with confidence: pilot with a small group first, tune your thresholds, then expand across the organization.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/roll-out-at-scale"
+                 target="_blank" rel="noopener">
+                <strong>Expand coverage</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Pick pilot repos with engaged maintainers and active PR traffic. Their feedback is what makes the wider rollout land.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="3">
+        <input class="task-checkbox" type="checkbox" id="resolve-pr-findings" />
+        <div class="task-main">
+          <label class="task-name" for="resolve-pr-findings">Show developers how to resolve findings in the pull request</label>
+          <div class="task-desc">
+            Adoption happens in the pull request. Walk your teams through applying a one-click Copilot autofix, delegating the work to Copilot, or dismissing findings that aren’t relevant.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/fix-findings-on-a-pr"
+                 target="_blank" rel="noopener">
+                <strong>Enable your devs</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Pair this with guidance on <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/unblock-your-pr" target="_blank" rel="noopener">resolving a threshold block</a>, so a blocked pull request never becomes a support ticket.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="3">
+        <input class="task-checkbox" type="checkbox" id="team-learning" />
+        <div class="task-main">
+          <label class="task-name" for="team-learning">Build team confidence</label>
+          <div class="task-desc">
+            Help your teams build knowledge to expand Code Quality across your org with this self-paced learning pathway.
+            <div class="link-row">
+              <a href="https://learn.github.com/learning-pathways/github-code-quality"
+                 target="_blank" rel="noopener">
+                <strong>Empower your team</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Share the pathway with teams as you expand Code Quality to new repos, so they can build on what’s already working.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="3">
+        <input class="task-checkbox" type="checkbox" id="resolve-backlog" />
+        <div class="task-main">
+          <label class="task-name" for="resolve-backlog">Start working down your existing backlog</label>
+          <div class="task-desc">
+            Generate fixes for backlog items by assigning them to Copilot via agentic autofix.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/fix-backlog-findings"
+                 target="_blank" rel="noopener">
+                <strong>Clear the debt</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Be sure to also review <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/fix-findings-in-recent-merges" target="_blank" rel="noopener">findings in recently merged files</a>: AI-powered analysis catches issues that rule-based queries were never written for.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+    </ul>
+
+    <div class="milestone-banner">
+      <div class="mi-text">
+        <strong>Steps completed? Here's the exec recap:</strong>
+        <span>GitHub Code Quality is live across teams, developers know how to act on findings in the pull request, and existing quality debt is actively being paid down.</span>
+      </div>
+    </div>
+  </section><!-- /week 3 -->
+
+
+  <!-- ── WEEK 4 ── -->
+  <section class="week-card" aria-labelledby="w4-title">
+    <div class="week-header">
+      <span class="week-badge">Week 4</span>
+      <div class="week-title-group">
+        <h2 class="week-title" id="w4-title">Prove Value</h2>
+        <p class="week-days">Measure code health, show the impact, and grow with confidence</p>
+      </div>
+      <div class="week-progress-mini" id="w4-count"><strong>0</strong> / 3</div>
+    </div>
+
+    <ul class="tasks-list" id="w4-tasks">
+
+      <li class="task-item" data-week="4">
+        <input class="task-checkbox" type="checkbox" id="interpret-results" />
+        <div class="task-main">
+          <label class="task-name" for="interpret-results">Interpret your repo’s code quality results</label>
+          <div class="task-desc">
+            Use your maintainability and reliability scores to understand where your codebase actually stands, so teams focus remediation where it matters most.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/interpret-results"
+                 target="_blank" rel="noopener">
+                <strong>Read your score</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Want a worked example? Follow the tutorial on <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/tutorials/improve-code-quality/raise-your-quality-rating" target="_blank" rel="noopener">raising your repository’s code quality score</a>.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="4">
+        <input class="task-checkbox" type="checkbox" id="track-code-health" />
+        <div class="task-main">
+          <label class="task-name" for="track-code-health">Track code health across your organization</label>
+          <div class="task-desc">
+            Use the org-level Code Quality dashboard to spot repos that need attention, and track how open findings trend over time.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/explore-code-quality"
+                 target="_blank" rel="noopener">
+                <strong>View insights</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> Code Quality reports are available in Security Overview alongside your other security tools, so one view covers both posture and code health for audits and compliance reporting.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="task-item" data-week="4">
+        <input class="task-checkbox" type="checkbox" id="manage-spend" />
+        <div class="task-main">
+          <label class="task-name" for="manage-spend">Understand and manage your Code Quality spend</label>
+          <div class="task-desc">
+            See exactly where charges come from — active committers, AI credits, and Actions minutes — and use the levers that keep spend predictable as you scale.
+            <div class="link-row">
+              <a href="https://docs.github.com/en/enterprise-cloud@latest/code-security/how-tos/maintain-quality-code/view-and-manage-cost"
+                 target="_blank" rel="noopener">
+                <strong>Prove the ROI</strong>
+              </a>
+              <div class="tip-box"><strong>💡 Tip:</strong> For the full cost model, including how per-seat licensing and AI credits are calculated, see <a href="https://docs.github.com/en/enterprise-cloud@latest/billing/concepts/product-billing/github-code-quality" target="_blank" rel="noopener">GitHub Code Quality billing</a>.</div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+
+    </ul>
+
+    <div class="milestone-banner">
+      <div class="mi-text">
+        <strong>Steps completed? Here's the exec recap:</strong>
+        <span>GitHub Code Quality is delivering measurable improvements to code health, with clear reporting on both impact and cost.</span>
+      </div>
+    </div>
+  </section><!-- /week 4 -->
+
+  <!-- All done banner -->
+  <div id="all-done" role="status">
+    <h2>🎉 Congratulations!</h2>
+    <p>You've completed the 30-Day GitHub Code Quality Setup Checklist.<br>
+    Your organization is on its way to healthier, more maintainable code!</p>
+  </div>
+
+</main>
+
+<hr class="divider" />
+
+<!-- ════════════════  FOOTER  ════════════════ -->
+<footer>
+  <div class="footer-links">
+    <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">Privacy Policy</a>
+    &nbsp;|&nbsp;
+    <a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service">Terms of Service</a>
+    &nbsp;|&nbsp;
+    <a href="https://help.github.com/">GitHub Help</a>
+  </div>
+  &copy; 2026 GitHub, Inc. All rights reserved.<br />
+  GitHub, Inc.<br />
+  88 Colin P Kelly Jr St.<br />
+  San Francisco, CA 94107
+</footer>
+
+</div><!-- /.container -->
+
+<script>
+  (function() {
+    'use strict';
+
+    // Honor personalized links without rewriting standalone file URLs.
+    var visitorId   = new URLSearchParams(window.location.search).get('id');
+    var STORAGE_KEY = 'codequality-checklist-v1' + (visitorId ? ':' + encodeURIComponent(visitorId) : '');
+    var checkboxes  = Array.from(document.querySelectorAll('.task-checkbox'));
+    var TOTAL       = checkboxes.length;
+    var storageStatus = document.getElementById('storage-status');
+
+    /* ── Persist & restore ── */
+    function reportStorageError(message, error) {
+      storageStatus.textContent = message;
+      storageStatus.classList.add('warning');
+      console.warn(message, error);
+    }
+
+    function save() {
+      var state = {};
+      checkboxes.forEach(function(cb) { state[cb.id] = cb.checked; });
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        storageStatus.textContent = 'Progress is saved in this browser only, not shared across devices.';
+        storageStatus.classList.remove('warning');
+      } catch (e) {
+        reportStorageError('Progress could not be saved. You can still use the checklist, but changes may be lost when you close or reload this page.', e);
+      }
+    }
+
+    function load() {
+      try {
+        var raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        var state = JSON.parse(raw);
+        if (!state || typeof state !== 'object' || Array.isArray(state) ||
+            Object.keys(state).some(function(id) { return typeof state[id] !== 'boolean'; })) {
+          throw new Error('Invalid saved checklist progress');
+        }
+        checkboxes.forEach(function(cb) {
+          cb.checked = state[cb.id] === true;
+        });
+      } catch (e) {
+        reportStorageError('Saved progress could not be loaded. The checklist starts unchecked; selecting a task will try to save a new copy.', e);
+      }
+    }
+
+    /* ── UI update ── */
+    function update() {
+      var total = 0;
+      document.querySelectorAll('.week-card').forEach(function(card) {
+        var items = card.querySelectorAll('.task-item');
+        var done = 0;
+        items.forEach(function(li) {
+          var cb = li.querySelector('.task-checkbox');
+          if (cb.checked) { done++; total++; li.classList.add('done'); }
+          else            { li.classList.remove('done'); }
+        });
+        var countEl = card.querySelector('.week-progress-mini');
+        countEl.querySelector('strong').textContent = done;
+        countEl.lastChild.textContent = ' / ' + items.length;
+      });
+
+      var pct = Math.round((total / TOTAL) * 100);
+      document.getElementById('overall-bar').style.width = pct + '%';
+      document.getElementById('overall-count').textContent =
+        total + ' / ' + TOTAL + ' tasks completed';
+      var progress = document.getElementById('overall-progress');
+      progress.setAttribute('aria-valuemax', TOTAL);
+      progress.setAttribute('aria-valuenow', total);
+      progress.setAttribute('aria-valuetext', total + ' of ' + TOTAL + ' tasks completed');
+
+      document.getElementById('all-done').style.display =
+        total === TOTAL ? 'block' : 'none';
+    }
+
+    /* ── Reset handler ── */
+    document.getElementById('reset-btn').addEventListener('click', function() {
+      checkboxes.forEach(function(cb) { cb.checked = false; });
+      save();
+      update();
+    });
+
+    /* ── Wire up checkbox events ── */
+    checkboxes.forEach(function(cb) {
+      cb.addEventListener('change', function() { save(); update(); });
+    });
+
+    /* ── Init ── */
+    load();
+    update();
+  })();
+</script>
+</body>
+</html>
